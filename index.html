@@ -1,0 +1,866 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CampusConnect – Right Resource. Right Person. Right Now.</title>
+    <meta name="description" content="Intelligent Campus Resource Coordination. Solve the 20-minute campus coordination problem with instant peer and facility matching." />
+    <meta property="og:title" content="CampusConnect – Right Resource. Right Person. Right Now." />
+    <meta property="og:description" content="Intelligent Campus Resource Coordination. Solve the 20-minute campus coordination problem with instant peer and facility matching." />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet" />
+
+    <!-- Core Stylesheet -->
+    <link rel="stylesheet" href="/style.css" />
+  </head>
+  <body>
+    <!-- Top-Right Floating Toast Notification Container -->
+    <div id="toastContainer"></div>
+
+    <!-- ======================================================================
+         1. LOGIN VIEW
+         ====================================================================== -->
+    <div id="loginView" class="login-wrapper">
+      <div class="login-card">
+        <div class="login-header">
+          <div class="brand-badge">🎓 Hackathon Prototype</div>
+          <h1 class="brand-title">CAMPUSCONNECT</h1>
+          <div class="brand-tagline">“Right Resource. Right Person. Right Now.”</div>
+          <div class="problem-statement-badge">
+            The 20-Minute Problem – Intelligent Campus Resource Coordination
+          </div>
+        </div>
+
+        <form id="loginForm">
+          <div class="form-group">
+            <label class="form-label" for="loginName">Student Name</label>
+            <input type="text" id="loginName" class="form-input" placeholder="e.g. Priya Sharma" required value="Priya Sharma" />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="loginId">Student ID / USN</label>
+            <input type="text" id="loginId" class="form-input" placeholder="e.g. 1MS21CS089" required value="CS2024042" />
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="loginDept">Department</label>
+              <select id="loginDept" class="form-select">
+                <option value="ISE" selected>Information Science (ISE)</option>
+                <option value="CSE">Computer Science (CSE)</option>
+                <option value="ECE">Electronics (ECE)</option>
+                <option value="Mechanical">Mechanical Engg</option>
+                <option value="Civil">Civil Engg</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="loginSem">Semester</label>
+              <select id="loginSem" class="form-select">
+                <option value="2nd Semester">2nd Semester</option>
+                <option value="4th Semester" selected>4th Semester</option>
+                <option value="6th Semester">6th Semester</option>
+                <option value="8th Semester">8th Semester</option>
+              </select>
+            </div>
+          </div>
+
+          <button type="submit" class="btn btn-primary btn-block" style="padding: 12px; margin-top: 8px;">
+            Enter CampusConnect
+          </button>
+        </form>
+
+        <div class="quick-login-box">
+          <button type="button" class="quick-demo-btn" onclick="handleQuickDemoLogin()">
+            ⚡ Quick Fill Demo Profile
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ======================================================================
+         2. MAIN APP SHELL (Sidebar + Navigation + Content)
+         ====================================================================== -->
+    <div id="appShell" class="app-container" style="display: none;">
+      <!-- Sidebar Navigation -->
+      <aside class="sidebar">
+        <div class="sidebar-header">
+          <div class="sidebar-logo">
+            <div class="logo-icon">🎓</div>
+            <div>
+              <div class="logo-text">CampusConnect</div>
+              <div class="sidebar-tagline">Intelligent Coordination</div>
+            </div>
+          </div>
+        </div>
+
+        <ul class="nav-menu">
+          <li class="nav-section-title">Core Engine</li>
+          <li class="nav-item">
+            <a class="nav-link active" data-tab="dashboard" onclick="switchTab('dashboard')">
+              <span>🏠</span> <span>Dashboard</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" data-tab="ai-find" onclick="switchTab('ai-find')">
+              <span>✨</span> <span>AI Find</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" data-tab="people" onclick="switchTab('people')">
+              <span>👥</span> <span>People</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" data-tab="resources" onclick="switchTab('resources')">
+              <span>💻</span> <span>Resources</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" data-tab="map" onclick="switchTab('map')">
+              <span>🗺</span> <span>Campus Map</span>
+            </a>
+          </li>
+
+          <li class="nav-section-title">My Activity</li>
+          <li class="nav-item">
+            <a class="nav-link" data-tab="requests" onclick="switchTab('requests')">
+              <span>📋</span> <span>My Requests</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" data-tab="bookings" onclick="switchTab('bookings')">
+              <span>📅</span> <span>Bookings</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" data-tab="notifications" onclick="switchTab('notifications')">
+              <span>🔔</span> <span>Notifications</span>
+              <span class="nav-badge" id="sidebarNotifBadge">2</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" data-tab="profile" onclick="switchTab('profile')">
+              <span>👤</span> <span>Profile</span>
+            </a>
+          </li>
+
+          <li class="nav-section-title">Administration</li>
+          <li class="nav-item">
+            <a class="nav-link" data-tab="admin" onclick="switchTab('admin')">
+              <span>📊</span> <span>Admin Dashboard</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" data-tab="owner" onclick="switchTab('owner')">
+              <span>🛠</span> <span>Faculty & Lab Owner</span>
+            </a>
+          </li>
+        </ul>
+
+        <div class="sidebar-footer">
+          <div class="user-mini-card">
+            <div class="user-avatar-sm">PS</div>
+            <div class="user-info-text">
+              <div class="user-name-sm" id="sidebarStudentName">Priya Sharma</div>
+              <div class="user-role-sm" id="sidebarStudentDept">ISE • 4th Sem</div>
+            </div>
+            <button class="logout-btn-sm" title="Log Out" onclick="handleLogout()">🚪</button>
+          </div>
+        </div>
+      </aside>
+
+      <!-- Main Content Area -->
+      <div class="main-wrapper">
+        <!-- Top Sticky Bar -->
+        <header class="top-bar">
+          <div class="top-greeting">
+            <h2>Good Morning, <span id="topStudentName">Priya</span> 👋</h2>
+            <div class="campus-status-pill">
+              <span class="status-dot"></span>
+              <span id="livePulseText">Lab 204: 3 systems free</span>
+            </div>
+          </div>
+
+          <div class="top-actions">
+            <div class="location-chip">
+              <span>📍</span> <span>Block B (Library Wing)</span>
+            </div>
+            <button class="icon-btn" title="View Notifications" onclick="switchTab('notifications')">
+              <span>🔔</span>
+              <span class="badge-counter" id="notifBadgeCount">2</span>
+            </button>
+          </div>
+        </header>
+
+        <!-- Main Tab Panes -->
+        <main class="content-area">
+          <!-- ================================================================
+               TAB 1: STUDENT DASHBOARD (The Hero Section)
+               ================================================================ -->
+          <section id="tab-dashboard" class="tab-pane active">
+            <!-- Hero Need Box -->
+            <div class="hero-need-card">
+              <div class="hero-header">
+                <div class="hero-title-group">
+                  <h3>THE 20-MINUTE PROBLEM RESOLVER</h3>
+                  <h1>WHAT DO YOU NEED TODAY?</h1>
+                </div>
+                <div class="hackathon-timer-pill">
+                  <span>⚡</span> Target: Connected in &lt; 20 Mins
+                </div>
+              </div>
+
+              <!-- Search Input -->
+              <div class="search-input-wrapper">
+                <input
+                  type="text"
+                  id="smartSearchInput"
+                  class="search-input-box"
+                  placeholder="e.g. I need a laptop and someone to help me with Python for my project."
+                  value="I need a laptop and someone to help me with Python for my project."
+                />
+                <button class="search-submit-btn" onclick="handleSmartSearch()">
+                  <span>✨</span> <span>Find it for me</span>
+                </button>
+              </div>
+
+              <!-- Suggested Test Chips -->
+              <div class="prompt-chips-wrapper">
+                <span class="prompt-chips-label">Try Demo Scenarios:</span>
+                <button type="button" class="prompt-chip" onclick="handleSmartSearch('I need a laptop and someone to help me with Python for my project.')">
+                  💻 Laptop + 🐍 Python Help (Main Scenario)
+                </button>
+                <button type="button" class="prompt-chip" onclick="handleSmartSearch('Need oscilloscope and someone who knows Arduino in Block C')">
+                  ⚡ Oscilloscope + Arduino Help
+                </button>
+                <button type="button" class="prompt-chip" onclick="handleSmartSearch('Looking for a quiet study space and Java interview prep')">
+                  📚 Quiet Study + Java Peer
+                </button>
+                <button type="button" class="prompt-chip" onclick="handleSmartSearch('Need 3D printer for mechanical prototype right now')">
+                  🖨️ 3D Printer + CAD Mentor
+                </button>
+              </div>
+
+              <!-- Quick Actions -->
+              <div class="quick-actions-bar">
+                <div class="quick-actions-title">QUICK ACTIONS</div>
+                <div class="quick-actions-grid">
+                  <button type="button" class="action-pill-btn" data-prompt="Find someone who can help with programming and code review">
+                    <span>👤</span> <span>Find a Person</span>
+                  </button>
+                  <button type="button" class="action-pill-btn" data-prompt="Find equipment like oscilloscopes, 3D printers and sensors">
+                    <span>🧰</span> <span>Find Equipment</span>
+                  </button>
+                  <button type="button" class="action-pill-btn" data-prompt="Find available computer lab with high-speed internet and GPUs">
+                    <span>🏢</span> <span>Find Lab</span>
+                  </button>
+                  <button type="button" class="action-pill-btn" data-prompt="Find quiet study space and group discussion room">
+                    <span>📖</span> <span>Find Study Space</span>
+                  </button>
+                  <button type="button" class="action-pill-btn" data-prompt="Find hackathon teammate with web development and UI/UX skills">
+                    <span>🤝</span> <span>Find Teammate</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Intelligent Search Results Container -->
+            <div id="searchResultsContainer" class="results-container">
+              <!-- Understood Request Breakdown -->
+              <div class="understood-box">
+                <div class="understood-label-group">
+                  <span class="understood-badge">System Understood</span>
+                  <span style="font-size: 13px; font-weight: 600; color: #334155;">Parsed Student Requirement:</span>
+                </div>
+                <div class="understood-chips" id="understoodChipsContainer">
+                  <!-- Injected via JavaScript -->
+                  <span class="understood-chip">💻 Laptop</span>
+                  <span class="understood-chip">🐍 Python assistance</span>
+                  <span class="understood-chip urgency">⏱ Immediate</span>
+                </div>
+              </div>
+
+              <div style="margin-bottom: 12px; font-size: 14px; font-weight: 800; color: #0f172a; text-transform: uppercase; letter-spacing: 0.5px;">
+                BEST MATCHES (Right Person + Right Resource)
+              </div>
+
+              <!-- Side-by-side Best Person & Best Resource Cards -->
+              <div class="matches-grid">
+                <!-- Person Card -->
+                <div class="match-card" id="bestPersonCard">
+                  <!-- Populated by script.js -->
+                </div>
+
+                <!-- Resource Card -->
+                <div class="match-card" id="bestResourceCard">
+                  <!-- Populated by script.js -->
+                </div>
+              </div>
+            </div>
+
+            <!-- Campus Pulse & Live Coordination Highlights -->
+            <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 20px; margin-top: 10px;">
+              <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 16px; padding: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
+                  <h4 style="font-size: 15px; font-weight: 700; color: #0f172a;">⚡ Live Coordination Pulse</h4>
+                  <span style="font-size: 11px; background: #ecfdf5; color: #047857; padding: 3px 8px; border-radius: 9999px; font-weight: 700;">Simulating Live Campus</span>
+                </div>
+                <div style="display: flex; flex-direction: column; gap: 10px; font-size: 13px;">
+                  <div style="display: flex; align-items: center; justify-content: space-between; padding: 10px 12px; background: #f8fafc; border-radius: 8px;">
+                    <div>
+                      <strong>Lab 204 (Block B)</strong>
+                      <div style="font-size: 11px; color: #64748b;">High demand • Next open slot 10 mins</div>
+                    </div>
+                    <span id="pulseLab204Count" style="font-weight: 700; color: #10b981;">3 systems available</span>
+                  </div>
+                  <div style="display: flex; align-items: center; justify-content: space-between; padding: 10px 12px; background: #f8fafc; border-radius: 8px;">
+                    <div>
+                      <strong>Rahul (ISE)</strong>
+                      <div style="font-size: 11px; color: #64748b;">Python • Machine Learning</div>
+                    </div>
+                    <span style="font-weight: 700; color: #10b981;">🟢 Free in Block B</span>
+                  </div>
+                  <div style="display: flex; align-items: center; justify-content: space-between; padding: 10px 12px; background: #f8fafc; border-radius: 8px;">
+                    <div>
+                      <strong>Electronics Lab (Block C)</strong>
+                      <div style="font-size: 11px; color: #64748b;">2 digital storage scopes ready</div>
+                    </div>
+                    <span style="font-weight: 700; color: #10b981;">🟢 Open walk-in</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Coordination Value Card -->
+              <div style="background: linear-gradient(135deg, #1e293b, #0f172a); color: #fff; border-radius: 16px; padding: 22px; display: flex; flex-direction: column; justify-content: space-between;">
+                <div>
+                  <div style="font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: #38bdf8; font-weight: 800; margin-bottom: 6px;">
+                    THE 20-MINUTE PROBLEM
+                  </div>
+                  <h4 style="font-size: 16px; font-weight: 700; line-height: 1.4;">Traditional campus search takes 45+ minutes.</h4>
+                  <p style="font-size: 12.5px; color: #94a3b8; margin-top: 8px;">
+                    CampusConnect replaces blind hallway wandering with algorithmic matching across peers and physical inventory.
+                  </p>
+                </div>
+                <div style="margin-top: 14px; padding-top: 12px; border-top: 1px solid rgba(255,255,255,0.1); font-size: 12px; color: #cbd5e1;">
+                  Average Coordination Time: <strong style="color: #10b981;">1.8 mins</strong>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- ================================================================
+               TAB 2: AI FIND (Exploration & Intent Inspector)
+               ================================================================ -->
+          <section id="tab-ai-find" class="tab-pane">
+            <div class="page-header">
+              <h1 class="page-title">✨ Intelligent Matcher</h1>
+              <p class="page-subtitle">Rule-based requirement parser and explainable multi-factor scoring</p>
+            </div>
+
+            <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 16px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); margin-bottom: 24px;">
+              <h3 style="font-size: 16px; font-weight: 700; margin-bottom: 12px;">Natural Language Intent Query</h3>
+              <div class="search-input-wrapper">
+                <input
+                  type="text"
+                  id="aiFindInput"
+                  class="search-input-box"
+                  placeholder="Describe your project goal, desired equipment, or skill requirements..."
+                  value="I need someone to help me with Java and a quiet study room"
+                />
+                <button class="search-submit-btn" onclick="const val = document.getElementById('aiFindInput').value; handleSmartSearch(val); switchTab('dashboard');">
+                  <span>✨</span> <span>Parse &amp; Match</span>
+                </button>
+              </div>
+
+              <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 20px;">
+                <div style="background: #f8fafc; padding: 14px; border-radius: 10px; border: 1px solid #e2e8f0;">
+                  <div style="font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase;">1. Requirement Extraction</div>
+                  <div style="font-size: 13px; font-weight: 600; margin-top: 4px; color: #0f172a;">Keyword &amp; Context Detection</div>
+                  <div style="font-size: 12px; color: #64748b; margin-top: 4px;">Identifies skills (e.g. Python, Java) and physical resources (e.g. Lab, 3D printer)</div>
+                </div>
+                <div style="background: #f8fafc; padding: 14px; border-radius: 10px; border: 1px solid #e2e8f0;">
+                  <div style="font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase;">2. Explainable Scoring</div>
+                  <div style="font-size: 13px; font-weight: 600; margin-top: 4px; color: #0f172a;">4-Factor Weight Formula</div>
+                  <div style="font-size: 12px; color: #64748b; margin-top: 4px;">Skill (40%) + Availability (30%) + Proximity (20%) + Time (10%)</div>
+                </div>
+                <div style="background: #f8fafc; padding: 14px; border-radius: 10px; border: 1px solid #e2e8f0;">
+                  <div style="font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase;">3. Actionable Output</div>
+                  <div style="font-size: 13px; font-weight: 600; margin-top: 4px; color: #0f172a;">Immediate Connect &amp; Reserve</div>
+                  <div style="font-size: 12px; color: #64748b; margin-top: 4px;">One-click reservation &amp; peer ping with guaranteed location</div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- ================================================================
+               TAB 3: PEOPLE (Campus Peer Network)
+               ================================================================ -->
+          <section id="tab-people" class="tab-pane">
+            <div class="page-header">
+              <h1 class="page-title">👥 Student Peer Network</h1>
+              <p class="page-subtitle">Find campus colleagues ready to collaborate, teach, or study together right now</p>
+            </div>
+
+            <div class="filter-bar">
+              <input type="text" id="peopleSearchInput" class="form-input search-box-sm" placeholder="🔍 Search by name, department, or skill..." />
+              <div class="filter-tags">
+                <button class="filter-tag-btn active" onclick="renderPeople('all')">All Students</button>
+                <button class="filter-tag-btn" onclick="renderPeople('available')">🟢 Available Now</button>
+              </div>
+            </div>
+
+            <div class="cards-grid" id="peopleGrid">
+              <!-- Populated by script.js -->
+            </div>
+          </section>
+
+          <!-- ================================================================
+               TAB 4: RESOURCES (Campus Inventory)
+               ================================================================ -->
+          <section id="tab-resources" class="tab-pane">
+            <div class="page-header">
+              <h1 class="page-title">💻 Campus Resources &amp; Facilities</h1>
+              <p class="page-subtitle">Labs, workstations, specialized lab gear, and quiet spaces with real-time seat counts</p>
+            </div>
+
+            <div class="filter-bar">
+              <input type="text" id="resourceSearchInput" class="form-input search-box-sm" placeholder="🔍 Search by lab, equipment, or block..." />
+              <div class="filter-tags">
+                <button class="filter-tag-btn active" onclick="renderResources('all')">All Resources</button>
+                <button class="filter-tag-btn" onclick="renderResources('labs')">💻 Computer Labs</button>
+                <button class="filter-tag-btn" onclick="renderResources('equipment')">⚡ Equipment &amp; MakerSpace</button>
+                <button class="filter-tag-btn" onclick="renderResources('study')">📚 Study Spaces</button>
+              </div>
+            </div>
+
+            <div class="cards-grid" id="resourcesGrid">
+              <!-- Populated by script.js -->
+            </div>
+          </section>
+
+          <!-- ================================================================
+               TAB 5: CAMPUS MAP
+               ================================================================ -->
+          <section id="tab-map" class="tab-pane">
+            <div class="page-header">
+              <h1 class="page-title">🗺 Campus Proximity Map</h1>
+              <p class="page-subtitle">Visual building layout with live resource availability and peer locations</p>
+            </div>
+
+            <div class="map-view-wrapper">
+              <!-- Visual Grid Blueprint -->
+              <div class="campus-visual-map">
+                <div class="map-title-row">
+                  <div style="font-weight: 700; font-size: 14px; color: #0f172a;">CAMPUS ZONES (Click any block to inspect)</div>
+                  <div style="font-size: 12px; color: #64748b;">📍 You are at: <strong>Block B (Library Wing)</strong></div>
+                </div>
+
+                <div class="map-grid-zones">
+                  <!-- Block A -->
+                  <div class="map-block-card" data-block="Block A" onclick="selectCampusBlock('Block A')">
+                    <div class="block-header">
+                      <div class="block-name">Block A</div>
+                      <div class="block-icon">🏢</div>
+                    </div>
+                    <div class="block-summary">Core Engineering &amp; AI Lab</div>
+                    <div class="block-pills">
+                      <span class="block-stat-badge">Lab 102</span>
+                      <span class="block-stat-badge">5 min walk</span>
+                    </div>
+                  </div>
+
+                  <!-- Block B -->
+                  <div class="map-block-card active-block" data-block="Block B" onclick="selectCampusBlock('Block B')">
+                    <div class="block-header">
+                      <div class="block-name">Block B</div>
+                      <div class="block-icon">💻</div>
+                    </div>
+                    <div class="block-summary">Computer Center &amp; ISE Dept</div>
+                    <div class="block-pills">
+                      <span class="block-stat-badge" style="color: #10b981; font-weight: 800;">Lab 204 (3 Free)</span>
+                      <span class="block-stat-badge">&lt; 2 min walk</span>
+                    </div>
+                  </div>
+
+                  <!-- Block C -->
+                  <div class="map-block-card" data-block="Block C" onclick="selectCampusBlock('Block C')">
+                    <div class="block-header">
+                      <div class="block-name">Block C</div>
+                      <div class="block-icon">⚡</div>
+                    </div>
+                    <div class="block-summary">Electronics &amp; AV Studio</div>
+                    <div class="block-pills">
+                      <span class="block-stat-badge">Electronics Lab</span>
+                      <span class="block-stat-badge">4 min walk</span>
+                    </div>
+                  </div>
+
+                  <!-- Central Library -->
+                  <div class="map-block-card" data-block="Library" onclick="selectCampusBlock('Library')">
+                    <div class="block-header">
+                      <div class="block-name">Library</div>
+                      <div class="block-icon">📚</div>
+                    </div>
+                    <div class="block-summary">Quiet Pods &amp; Group Study</div>
+                    <div class="block-pills">
+                      <span class="block-stat-badge">Pod 3 (4 free)</span>
+                      <span class="block-stat-badge">3 min walk</span>
+                    </div>
+                  </div>
+
+                  <!-- Innovation Lab -->
+                  <div class="map-block-card" data-block="Innovation Lab" onclick="selectCampusBlock('Innovation Lab')">
+                    <div class="block-header">
+                      <div class="block-name">Innovation Lab</div>
+                      <div class="block-icon">🖨️</div>
+                    </div>
+                    <div class="block-summary">MakerSpace &amp; 3D Printers</div>
+                    <div class="block-pills">
+                      <span class="block-stat-badge">3D Hub (1 open)</span>
+                      <span class="block-stat-badge">6 min walk</span>
+                    </div>
+                  </div>
+
+                  <!-- Computer Lab -->
+                  <div class="map-block-card" data-block="Computer Lab" onclick="selectCampusBlock('Computer Lab')">
+                    <div class="block-header">
+                      <div class="block-name">Computing Hub</div>
+                      <div class="block-icon">🖥️</div>
+                    </div>
+                    <div class="block-summary">Open Terminals &amp; Server Room</div>
+                    <div class="block-pills">
+                      <span class="block-stat-badge">Workstations</span>
+                      <span class="block-stat-badge">3 min walk</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Map Details Panel -->
+              <div class="map-details-card" id="mapDetailsPanel">
+                <!-- Injected via JavaScript -->
+              </div>
+            </div>
+          </section>
+
+          <!-- ================================================================
+               TAB 6: MY REQUESTS (5-Step Progress Timeline)
+               ================================================================ -->
+          <section id="tab-requests" class="tab-pane">
+            <div class="page-header">
+              <h1 class="page-title">📋 My Active Requests</h1>
+              <p class="page-subtitle">Track your campus coordination requests from creation to connection and completion</p>
+            </div>
+
+            <div class="requests-list" id="requestsListContainer">
+              <!-- Injected via JavaScript -->
+            </div>
+          </section>
+
+          <!-- ================================================================
+               TAB 7: BOOKINGS
+               ================================================================ -->
+          <section id="tab-bookings" class="tab-pane">
+            <div class="page-header">
+              <h1 class="page-title">📅 Confirmed Resource Bookings</h1>
+              <p class="page-subtitle">Your reserved lab systems, maker tools, and study pods</p>
+            </div>
+
+            <div class="bookings-grid" id="bookingsGridContainer">
+              <!-- Injected via JavaScript -->
+            </div>
+          </section>
+
+          <!-- ================================================================
+               TAB 8: NOTIFICATIONS
+               ================================================================ -->
+          <section id="tab-notifications" class="tab-pane">
+            <div class="page-header">
+              <h1 class="page-title">🔔 Campus Notifications</h1>
+              <p class="page-subtitle">Live alerts on peer requests, booking confirmations, and lab availability</p>
+            </div>
+
+            <div class="notifications-card">
+              <div class="notifications-header">
+                <span style="font-weight: 700; font-size: 14px; color: #0f172a;">Recent Activity</span>
+                <button class="btn btn-secondary btn-sm" onclick="markAllNotificationsRead()">Mark all as read</button>
+              </div>
+              <div id="notificationsListContainer">
+                <!-- Injected via JavaScript -->
+              </div>
+            </div>
+          </section>
+
+          <!-- ================================================================
+               TAB 9: STUDENT PROFILE
+               ================================================================ -->
+          <section id="tab-profile" class="tab-pane">
+            <div class="page-header">
+              <h1 class="page-title">👤 Student Profile</h1>
+              <p class="page-subtitle">Manage your campus helper profile and skills you can offer other students</p>
+            </div>
+
+            <div class="profile-layout">
+              <div class="profile-card">
+                <div class="profile-avatar-lg">PS</div>
+                <h3 id="profileName">Priya Sharma</h3>
+                <div class="profile-id" id="profileId">CS2024042</div>
+
+                <div class="profile-info-list">
+                  <div class="profile-info-row">
+                    <span class="profile-info-label">Department:</span>
+                    <span class="profile-info-value" id="profileDept">ISE</span>
+                  </div>
+                  <div class="profile-info-row">
+                    <span class="profile-info-label">Semester:</span>
+                    <span class="profile-info-value" id="profileSem">4th Semester</span>
+                  </div>
+                  <div class="profile-info-row">
+                    <span class="profile-info-label">Default Block:</span>
+                    <span class="profile-info-value" id="profileLocation">Block B</span>
+                  </div>
+                  <div class="profile-info-row">
+                    <span class="profile-info-label">Availability:</span>
+                    <span class="profile-info-value" id="profileAvail" style="color: #10b981;">Available</span>
+                  </div>
+                </div>
+
+                <button class="btn btn-secondary btn-block" onclick="toggleMyAvailability()">
+                  Toggle Availability Status
+                </button>
+              </div>
+
+              <div class="profile-skills-card">
+                <h3 style="font-size: 18px; font-weight: 700; margin-bottom: 8px;">My Technical &amp; Project Skills</h3>
+                <p style="font-size: 13px; color: #64748b; margin-bottom: 16px;">
+                  Other students will discover you when searching for assistance in these domains:
+                </p>
+
+                <div id="profileSkillsContainer" style="display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 24px;">
+                  <!-- Injected via JavaScript -->
+                </div>
+
+                <div class="add-skill-box">
+                  <h4>I can help others with...</h4>
+                  <div style="display: flex; gap: 10px;">
+                    <input type="text" id="newSkillInput" class="form-input" placeholder="e.g. Flutter, Docker, CAD, React..." />
+                    <button class="btn btn-primary" onclick="addStudentSkill()">Add Skill</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- ================================================================
+               TAB 10: ADMIN DASHBOARD
+               ================================================================ -->
+          <section id="tab-admin" class="tab-pane">
+            <div class="page-header">
+              <h1 class="page-title">📊 Campus Coordination Analytics</h1>
+              <p class="page-subtitle">Real-time statistics on campus students, resource utilization, and skill demands</p>
+            </div>
+
+            <!-- Stats Counter Row -->
+            <div class="admin-metrics-grid">
+              <div class="metric-card">
+                <div class="metric-icon-box" style="background: #eff6ff; color: #2563eb;">👥</div>
+                <div>
+                  <div class="metric-value" id="adminTotalStudents">250</div>
+                  <div class="metric-label">Total Students Active</div>
+                </div>
+              </div>
+
+              <div class="metric-card">
+                <div class="metric-icon-box" style="background: #ecfdf5; color: #10b981;">💻</div>
+                <div>
+                  <div class="metric-value" id="adminAvailableRes">32</div>
+                  <div class="metric-label">Available Resources</div>
+                </div>
+              </div>
+
+              <div class="metric-card">
+                <div class="metric-icon-box" style="background: #fffbeb; color: #f59e0b;">⚡</div>
+                <div>
+                  <div class="metric-value" id="adminActiveReqs">18</div>
+                  <div class="metric-label">Active Requests</div>
+                </div>
+              </div>
+
+              <div class="metric-card">
+                <div class="metric-icon-box" style="background: #fdf2f8; color: #db2777;">📅</div>
+                <div>
+                  <div class="metric-value" id="adminTodayBookings">46</div>
+                  <div class="metric-label">Today's Bookings</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="admin-analytics-grid">
+              <!-- Skills Demand -->
+              <div class="chart-card">
+                <h4>Most Requested Skills</h4>
+                <div id="adminSkillsChart">
+                  <!-- Injected via JavaScript -->
+                </div>
+              </div>
+
+              <!-- Problem Resolution Impact -->
+              <div class="chart-card">
+                <h4>Coordination Efficiency vs Traditional</h4>
+                <div style="margin-top: 14px; font-size: 13px; color: #64748b; line-height: 1.6;">
+                  <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                    <span>Traditional Hallway Search</span>
+                    <strong style="color: #ef4444;">45 - 60 mins</strong>
+                  </div>
+                  <div class="progress-track" style="margin-bottom: 16px;">
+                    <div class="progress-bar-fill" style="width: 85%; background: #ef4444;"></div>
+                  </div>
+
+                  <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                    <span>CampusConnect Direct Match</span>
+                    <strong style="color: #10b981;">1.8 mins avg</strong>
+                  </div>
+                  <div class="progress-track">
+                    <div class="progress-bar-fill" style="width: 15%; background: #10b981;"></div>
+                  </div>
+
+                  <div style="margin-top: 20px; padding: 14px; background: #f0fdf4; border-radius: 8px; border: 1px solid #bbf7d0; color: #166534;">
+                    ✓ <strong>96% reduction in coordination overhead:</strong> Students match with peer mentors and open lab seats before the 20-minute window expires.
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- ================================================================
+               TAB 11: RESOURCE OWNER / FACULTY CONTROLS
+               ================================================================ -->
+          <section id="tab-owner" class="tab-pane">
+            <div class="page-header">
+              <h1 class="page-title">🛠 Faculty &amp; Lab Administrator</h1>
+              <p class="page-subtitle">Manage campus equipment, adjust seat counts, and register new facilities</p>
+            </div>
+
+            <!-- Existing Resources Table -->
+            <div class="owner-card">
+              <h3 style="font-size: 16px; font-weight: 700; margin-bottom: 16px;">Manage Live Resource Inventory</h3>
+              <div style="overflow-x: auto;">
+                <table class="owner-table">
+                  <thead>
+                    <tr>
+                      <th>Resource / Lab</th>
+                      <th>Location</th>
+                      <th>Available / Total</th>
+                      <th>Status Control</th>
+                    </tr>
+                  </thead>
+                  <tbody id="ownerResourcesTableBody">
+                    <!-- Injected via JavaScript -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- Add New Resource Form -->
+            <div class="owner-card">
+              <h3 style="font-size: 16px; font-weight: 700; margin-bottom: 16px;">Register New Resource</h3>
+              <form id="newResourceForm">
+                <div class="form-row">
+                  <div class="form-group">
+                    <label class="form-label">Resource Name</label>
+                    <input type="text" id="newResName" class="form-input" placeholder="e.g. Robotics Workbench 2" required />
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">Category / Type</label>
+                    <input type="text" id="newResType" class="form-input" placeholder="e.g. Hardware Lab" required />
+                  </div>
+                </div>
+
+                <div class="form-row">
+                  <div class="form-group">
+                    <label class="form-label">Total Capacity / Units</label>
+                    <input type="number" id="newResTotal" class="form-input" value="5" min="1" max="50" required />
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">Location / Block</label>
+                    <select id="newResLocation" class="form-select">
+                      <option value="Block A">Block A</option>
+                      <option value="Block B" selected>Block B</option>
+                      <option value="Block C">Block C</option>
+                      <option value="Library">Library</option>
+                      <option value="Innovation Lab">Innovation Lab</option>
+                    </select>
+                  </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary" style="margin-top: 8px;">
+                  + Add to Campus Inventory
+                </button>
+              </form>
+            </div>
+          </section>
+        </main>
+      </div>
+    </div>
+
+    <!-- ======================================================================
+         3. RESERVATION BOOKING MODAL
+         ====================================================================== -->
+    <div id="bookingModal" class="modal-overlay">
+      <div class="modal-box">
+        <div class="modal-header">
+          <h3>Reserve <span id="bookingResourceName">Lab 204</span></h3>
+          <button class="modal-close-btn" onclick="closeBookingModal()">&times;</button>
+        </div>
+
+        <div class="modal-body">
+          <!-- Input Form View -->
+          <div id="bookingFormView">
+            <div class="form-group">
+              <label class="form-label">Date</label>
+              <input type="text" id="bookingDate" class="form-input" value="Today" />
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Requested Time Slot</label>
+              <input type="text" id="bookingTime" class="form-input" value="3:00 PM – 4:00 PM" />
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Duration</label>
+              <select id="bookingDuration" class="form-select">
+                <option value="30 Minutes">30 Minutes</option>
+                <option value="1 Hour" selected>1 Hour</option>
+                <option value="2 Hours">2 Hours</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Purpose / Notes</label>
+              <input type="text" id="bookingPurpose" class="form-input" placeholder="e.g. Python Machine Learning prototype" value="Python Project Work" />
+            </div>
+          </div>
+
+          <!-- Confirmation Success View -->
+          <div id="bookingSuccessView" style="display: none;">
+            <!-- Injected via JavaScript upon booking confirmation -->
+          </div>
+        </div>
+
+        <div class="modal-footer" id="bookingModalFooter">
+          <button class="btn btn-secondary" onclick="closeBookingModal()">Cancel</button>
+          <button class="btn btn-primary" onclick="confirmBooking()">Confirm Booking</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Application Script (Vanilla JS + OOP Engine) -->
+    <script src="/script.js"></script>
+  </body>
+</html>

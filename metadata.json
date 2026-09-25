@@ -1,0 +1,6 @@
+{
+  "name": "CampusConnect",
+  "description": "Right Resource. Right Person. Right Now. The 20-Minute Problem – Intelligent Campus Resource Coordination.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
